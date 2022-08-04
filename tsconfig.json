@@ -37,13 +37,4 @@
   "exclude": [
     "node_modules"
   ],
-  
-    "prettier/prettier": [
-      "error",
-      {
-        "singleQuote": true,
-        "parser": "flow"
-      }
-    ]
-  
 }

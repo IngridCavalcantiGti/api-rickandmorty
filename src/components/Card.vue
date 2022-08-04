@@ -1,6 +1,6 @@
 <template>
   <div
-    class="shadow-lg m-10 h-50 w-40"
+    class="shadow-lg m-10 h-50 w-40 bg-gray-300"
     v-for="(character, index) in characters"
     :key="index"
   >
@@ -13,6 +13,7 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
 import { defineComponent } from "vue";
 

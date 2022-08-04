@@ -1,5 +1,6 @@
 <template>
-  <div class="home">
+  <div class="bg-gray-400">
+    <Search @onInput="onInput" />
     <div class="flex flex-wrap">
       <Card :characters="characters" class="border-gray-400 border-4"></Card>
     </div>
@@ -10,9 +11,10 @@
 import { defineComponent, ref, onMounted } from "vue";
 import axios from "axios";
 import Card from "@/components/Card.vue";
+import Search from "@/components/Search.vue";
 
 export default defineComponent({
-  components: { Card },
+  components: { Card, Search },
   setup() {
     const characters = ref(null);
 
@@ -29,7 +31,11 @@ export default defineComponent({
         .catch((error) => console.log(error));
     };
 
-    return { characters, getAll };
+    const onInput = (value: string) => {
+      console.log(value);
+    };
+
+    return { characters, getAll, onInput };
   },
 });
 </script>
