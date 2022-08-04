@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gray-400">
-    <div class="flex justify-end">
+    <div class="flex justify-end flex-wrap">
       <Button label="Status Alive" class="m-2" />
       <Button label="Species Human" class="m-2" />
       <Button label="Grouping by status" class="m-2" />
@@ -8,7 +8,10 @@
 
     <Search @onInput="onInput" />
     <div class="flex flex-wrap">
-      <Card :characters="characters" class="border-gray-400 border-4"></Card>
+      <Card :characters="characters" class="border-green-4 border-4"></Card>
+    </div>
+    <div>
+      <Pagination />
     </div>
   </div>
 </template>
@@ -19,9 +22,10 @@ import axios from "axios";
 import Card from "@/components/Card.vue";
 import Search from "@/components/Search.vue";
 import Button from "@/components/Button.vue";
+import Pagination from "@/components/Pagination.vue";
 
 export default defineComponent({
-  components: { Card, Search, Button },
+  components: { Card, Search, Button, Pagination },
   setup() {
     const characters = ref(null);
 
