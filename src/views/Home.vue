@@ -1,18 +1,35 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <div class="flex flex-wrap">
+      <Card :characters="characters" class="border-gray-400 border-4"></Card>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+import { defineComponent, ref, onMounted } from "vue";
+import axios from "axios";
+import Card from "@/components/Card.vue";
 
-@Options({
-  components: {
-    HelloWorld,
+export default defineComponent({
+  components: { Card },
+  setup() {
+    const characters = ref(null);
+
+    onMounted(() => {
+      getAll();
+    });
+
+    const getAll = () => {
+      axios
+        .get(`https://rickandmortyapi.com/api/character`)
+        .then((response) => {
+          characters.value = response.data.results;
+        })
+        .catch((error) => console.log(error));
+    };
+
+    return { characters, getAll };
   },
-})
-export default class Home extends Vue {}
+});
 </script>
