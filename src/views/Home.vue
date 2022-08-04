@@ -1,17 +1,23 @@
 <template>
-  <div class="bg-black">
-    <div class="flex justify-end flex-wrap">
+  <div class="bg-gray-800">
+    <div class="flex justify-end flex-wrap p-5">
       <Button label="Status Alive" class="m-2" />
       <Button label="Species Human" class="m-2" />
       <Button label="Grouping by status" class="m-2" />
     </div>
 
-    <Search @onInput="onInput" />
+    <Search @onInput="onInput" class="mb-5" />
     <div class="flex flex-wrap">
-      <Card :characters="characters" class="border-green-4 border-4"></Card>
+      <Card :characters="characters"></Card>
     </div>
     <div>
-      <Pagination />
+      <Pagination
+        labelNext="Next"
+        labelPrev="Prev"
+        class="p-10"
+        @onClickNext="next"
+        @onClickPrev="prev"
+      />
     </div>
   </div>
 </template>
@@ -46,7 +52,15 @@ export default defineComponent({
       console.log(value);
     };
 
-    return { characters, getAll, onInput };
+    const next = () => {
+      console.log("next");
+    };
+
+    const prev = () => {
+      console.log("prev");
+    };
+
+    return { characters, getAll, onInput, next, prev };
   },
 });
 </script>
