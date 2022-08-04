@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-400">
+  <div class="bg-black">
     <div class="flex justify-end flex-wrap">
       <Button label="Status Alive" class="m-2" />
       <Button label="Species Human" class="m-2" />
