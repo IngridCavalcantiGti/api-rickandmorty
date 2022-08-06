@@ -1,13 +1,12 @@
-<!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="flex space-x-2 justify-center">
+  <div>
     <button
       @click="() => $emit('onClick')"
       type="button"
       class="
         inline-block
         px-6
-        py-2.5
+        py-3
         bg-green-700
         text-white
         font-medium

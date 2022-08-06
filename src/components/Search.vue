@@ -1,8 +1,8 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <div class="flex justify-center">
-    <div class="mb-3 xl:w-96 mt-14">
-      <div class="input-group relative flex items-stretch w-full">
+    <div>
+      <div class="input-group flex items-stretch w-full">
         <input
           :value="value"
           @input="updateInput($event.target.value)"
@@ -11,7 +11,7 @@
             form-control
             flex-auto
             w-full
-            px-8
+            px-16
             py-1.5
             text-gray-700
             border border-solid border-gray-300
@@ -41,6 +41,7 @@
           "
           type="button"
           id="button-addon2"
+          @click="() => $emit('onFilter')"
         >
           <svg
             aria-hidden="true"
