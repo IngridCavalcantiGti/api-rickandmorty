@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-800">
+  <div class="bg-gray-800 min-h-screen">
     <div class="flex justify-center p-2">
       <img src="@/assets/Rick-And-Morty-Logo.png" class="w-1/4" />
     </div>
@@ -16,15 +16,20 @@
         class="mb-5"
         :value="search"
         @onFilter="filter"
+        @keyup.enter="filter"
       />
-
       <div></div>
     </div>
 
-    <div class="flex flex-wrap">
-      <Card :characters="characters"></Card>
+    <div class="flex flex-wrap justify-center">
+      <Card :characters="characters" v-if="showCards"></Card>
+      <EmptyCards
+        :CharactersNotFound="CharactersNotFoundTitle"
+        v-if="charactersNotFound"
+      ></EmptyCards>
     </div>
-    <div>
+
+    <div v-if="showPagination">
       <Pagination
         labelNext="Next"
         labelPrev="Prev"
@@ -37,20 +42,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted, watch } from "vue";
 import axios from "axios";
 import Card from "@/components/Card.vue";
 import Search from "@/components/Search.vue";
 import Button from "@/components/Button.vue";
 import Pagination from "@/components/Pagination.vue";
+import EmptyCards from "@/components/EmptyCards.vue";
 
 export default defineComponent({
-  components: { Card, Search, Button, Pagination },
+  components: { Card, Search, Button, Pagination, EmptyCards },
   setup() {
     const characters = ref([]);
     const search = ref("");
     const info = ref({ next: "", prev: "" });
     const apiUrl = "https://rickandmortyapi.com/api/character/";
+    const charactersNotFound = ref(false);
+    const showCards = ref(true);
+    const CharactersNotFoundTitle = ref("");
+    const showPagination = ref(true);
     onMounted(() => {
       getAll(apiUrl);
     });
@@ -63,8 +73,19 @@ export default defineComponent({
           characters.value = response.data.results;
           info.value = response.data.info;
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          CharactersNotFoundTitle.value =
+            error.code === "ERR_BAD_REQUEST"
+              ? "Characters not found"
+              : "Connection closed";
+          charactersNotFound.value = true;
+          showCards.value = false;
+          showPagination.value = false;
+          console.log(error);
+        });
     };
+
+    getAll(apiUrl);
 
     const onInput = (value: string) => {
       search.value = value.toLowerCase();
@@ -103,6 +124,15 @@ export default defineComponent({
       console.log("clickGrouping");
     };
 
+    watch(search, () => {
+      if (search.value.length < 1) {
+        showCards.value = true;
+        charactersNotFound.value = false;
+        showPagination.value = true;
+        getAll(apiUrl);
+      }
+    });
+
     return {
       characters,
       getAll,
@@ -114,6 +144,10 @@ export default defineComponent({
       clickGrouping,
       search,
       filter,
+      charactersNotFound,
+      showCards,
+      CharactersNotFoundTitle,
+      showPagination,
     };
   },
 });

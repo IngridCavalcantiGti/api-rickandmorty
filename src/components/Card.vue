@@ -7,8 +7,10 @@
     >
       <img class="w-full" :src="character.image" alt="image" />
 
-      <div class="px-6 py-2 text--center">
-        <p class="text-white font-bold mb-5">{{ character.name }}</p>
+      <div class="px-6 py-2 text--center h-20">
+        <p class="text-white font-bold mb-5x">{{ character.name }}</p>
+      </div>
+      <div class="text--center">
         <p class="text-white text-base bg-gray-400 border mb-2 rounded-full">
           {{ character.status }}
         </p>
