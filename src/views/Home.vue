@@ -22,7 +22,13 @@
     </div>
 
     <div class="flex flex-wrap justify-center">
-      <Card :characters="characters" v-if="showCards"></Card>
+      <Card :characters="characters" v-if="showCards && !grouped"></Card>
+      <template v-else-if="showCards">
+        <Card :characters="dead" title="Dead" class="text-white"></Card>
+        <Card :characters="alive" title="Alive" class="text-white"></Card>
+        <Card :characters="unknown" title="Unknown" class="text-white"></Card>
+      </template>
+
       <EmptyCards
         :CharactersNotFound="CharactersNotFoundTitle"
         v-if="charactersNotFound"
@@ -42,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, watch } from "vue";
+import { defineComponent, ref, onMounted, watch, computed } from "vue";
 import axios from "axios";
 import Card from "@/components/Card.vue";
 import Search from "@/components/Search.vue";
@@ -61,31 +67,33 @@ export default defineComponent({
     const showCards = ref(true);
     const CharactersNotFoundTitle = ref("");
     const showPagination = ref(true);
+
     onMounted(() => {
       getAll(apiUrl);
     });
 
     const getAll = (url: string) => {
-      axios
+      return axios
         .get(url)
 
         .then((response) => {
           characters.value = response.data.results;
           info.value = response.data.info;
         })
-        .catch((error) => {
-          CharactersNotFoundTitle.value =
-            error.code === "ERR_BAD_REQUEST"
-              ? "Characters not found"
-              : "Connection closed";
+        .catch(() => {
+          CharactersNotFoundTitle.value = "Not found";
           charactersNotFound.value = true;
           showCards.value = false;
           showPagination.value = false;
-          console.log(error);
         });
     };
 
-    getAll(apiUrl);
+    type Character = {
+      name: string;
+      status: string;
+      image: string;
+      species: string;
+    };
 
     const onInput = (value: string) => {
       search.value = value.toLowerCase();
@@ -117,11 +125,35 @@ export default defineComponent({
     };
 
     const clickHuman = () => {
-      getAll(apiUrl + "?species=human");
+      getAll(apiUrl + "?species=human").then(() => {
+        characters.value = characters.value.filter((character: Character) => {
+          return character.species === "Human";
+        });
+      });
     };
 
+    const dead = computed(() => {
+      return characters.value.filter(
+        (character: Character) => character.status === "Dead"
+      );
+    });
+
+    const unknown = computed(() => {
+      return characters.value.filter(
+        (character: Character) => character.status === "unknown"
+      );
+    });
+
+    const alive = computed(() => {
+      return characters.value.filter(
+        (character: Character) => character.status === "Alive"
+      );
+    });
+
+    const grouped = ref(false);
+
     const clickGrouping = () => {
-      console.log("clickGrouping");
+      grouped.value = !grouped.value;
     };
 
     watch(search, () => {
@@ -148,6 +180,10 @@ export default defineComponent({
       showCards,
       CharactersNotFoundTitle,
       showPagination,
+      alive,
+      unknown,
+      dead,
+      grouped,
     };
   },
 });

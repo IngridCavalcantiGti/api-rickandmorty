@@ -11,7 +11,7 @@
             form-control
             flex-auto
             w-full
-            px-16
+            px-11
             py-1.5
             text-gray-700
             border border-solid border-gray-300
